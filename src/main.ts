@@ -1,56 +1,56 @@
 import * as core from '@actions/core';
-import axios from "axios";
-import _ from "lodash";
-import { makeContents } from "./make";
+import _ from 'lodash';
+import {
+  createPage,
+  getChildrenByPage,
+  getVersionAndContents,
+  updatePage,
+} from './api';
 
 async function run(): Promise<void> {
-    try {
-        const pageId = core.getInput('pageId')
-        const pageTitle = core.getInput('pageTitle')
-        const contentsJson = core.getInput('contentsJson')
-        const jiraAuth = process.env.JIRA_AUTH;
-        const jiraUrl = process.env.JIRA_URL;
-
-        core.debug(`pageId: ${pageId}`)
-        core.debug(`pageTitle: ${pageTitle}`)
-        core.debug(`contentsJson: ${contentsJson}`)
-        core.debug(`jiraAuth: ${jiraAuth}`)
-        core.debug(`jiraUrl: ${jiraUrl}`)
-
-        if(_.isEmpty(pageId) || _.isEmpty(jiraAuth) || _.isEmpty(jiraUrl)) {
-            console.log('Check Value');
-            return;
-        }
-        const currentPage = await axios.get(`${jiraUrl}/wiki/rest/api/content/${pageId}?expand=body.storage,version`, {
-            headers: {
-                "Authorization": `Basic ${jiraAuth}`
-            }
-        });
-        const version = _.get(currentPage.data, 'version.number', '');
-        const prevContents = _.get(currentPage.data, 'body.storage.value', '');
-        await axios.put(`${jiraUrl}/wiki/rest/api/content/${pageId}`, {
-            "version": {
-                "number": _.toInteger(version) + 1
-            },
-            "title": pageTitle,
-            "type": "page",
-            "body": {
-                "storage": {
-                    "value": `${prevContents}${makeContents(contentsJson)}`,
-                    "representation": "storage"
-                }
-            }
-        }, {
-            headers: {
-                "Authorization": `Basic ${jiraAuth}`
-            }
-        })
-
-    } catch (error) {
-        if (error instanceof Error) {
-            core.setFailed(error.message);
-        }
+  try {
+    const parentPageId = core.getInput('parentPageId');
+    const childPageTitle = core.getInput('childPageTitle');
+    const contentsJson = core.getInput('contentsJson');
+    globalThis.JIRA_URL = process.env.JIRA_URL || '';
+    globalThis.JIRA_AUTH = process.env.JIRA_AUTH || '';
+    const {JIRA_URL, JIRA_AUTH} = globalThis;
+    core.debug(`parentPageId: ${parentPageId}`);
+    core.debug(`childPageTitle: ${childPageTitle}`);
+    core.debug(`contentsJson: ${contentsJson}`);
+    core.debug(`jiraAuth: ${JIRA_AUTH}`);
+    core.debug(`jiraUrl: ${JIRA_URL}`);
+    if (
+      _.isEmpty(parentPageId) ||
+      _.isEmpty(JIRA_AUTH) ||
+      _.isEmpty(JIRA_URL)
+    ) {
+      console.log('Check Value');
+      console.log(`pageId: ${parentPageId}`);
+      console.log(`jiraUrl: ${JIRA_URL}`);
+      console.log(`jiraAuth: ${JIRA_AUTH}`);
+      return;
     }
+    const children = await getChildrenByPage(parentPageId);
+    for (const c of children) {
+      if (c.title === childPageTitle) {
+        const {version, prevContents} = await getVersionAndContents(c.id);
+        await updatePage({
+          pageId: c.id,
+          version,
+          prevContents,
+          childPageTitle,
+          contentsJson,
+        });
+      } else {
+        await createPage(parentPageId, childPageTitle, contentsJson);
+      }
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      core.setFailed(error.message);
+    }
+  }
 }
 
 run();

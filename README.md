@@ -2,12 +2,12 @@
 steps:
   - uses: pymc20/action-confluence@main
   with:
-    pageId: 111111111
-    pageTitle: test
+    parentPageId: 111111111
+    childPageTitle: child
     contentsJson: |
       {
-        h1: "test",
-        li: "test\ntest\ntest"
+        "history": "test",
+        "Change Log": "test\ntest\ntest"
       }
   env:
     JIRA_URL: ${{ secrets.JIRA_URL }}     // DOMAIN.atlassian.net/
