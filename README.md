@@ -4,6 +4,7 @@ steps:
   with:
     parentPageId: 111111111
     childPageTitle: child
+    spaceKey: test
     contentsJson: |
       {
         "history": "test",
