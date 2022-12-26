@@ -12,12 +12,14 @@ async function run(): Promise<void> {
     const parentPageId = core.getInput('parentPageId');
     const childPageTitle = core.getInput('childPageTitle');
     const contentsJson = core.getInput('contentsJson');
+    const spaceKey = core.getInput('spaceKey');
     globalThis.JIRA_URL = process.env.JIRA_URL || '';
     globalThis.JIRA_AUTH = process.env.JIRA_AUTH || '';
     const {JIRA_URL, JIRA_AUTH} = globalThis;
     core.debug(`parentPageId: ${parentPageId}`);
     core.debug(`childPageTitle: ${childPageTitle}`);
     core.debug(`contentsJson: ${contentsJson}`);
+    core.debug(`spaceKey: ${spaceKey}`);
     core.debug(`jiraAuth: ${JIRA_AUTH}`);
     core.debug(`jiraUrl: ${JIRA_URL}`);
     if (
@@ -43,7 +45,7 @@ async function run(): Promise<void> {
           contentsJson,
         });
       } else {
-        await createPage(parentPageId, childPageTitle, contentsJson);
+        await createPage(parentPageId, childPageTitle, contentsJson, spaceKey);
       }
     }
   } catch (error) {

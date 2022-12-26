@@ -73,7 +73,8 @@ export async function getChildrenByPage(pageId: string) {
 export async function createPage(
   pageId: string,
   title: string,
-  contentsJson: string
+  contentsJson: string,
+  spaceKey: string
 ) {
   const {JIRA_URL, JIRA_AUTH} = globalThis;
   await axios.post(
@@ -88,7 +89,7 @@ export async function createPage(
       },
       type: 'page',
       space: {
-        key: 'BBD',
+        key: spaceKey,
       },
       ancestors: [
         {
