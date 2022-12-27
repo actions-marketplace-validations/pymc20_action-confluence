@@ -1,7 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
 import {makeContents} from './make';
-import * as core from '@actions/core';
 
 export async function getVersionAndContents(pageId: string) {
   const {JIRA_URL, JIRA_AUTH} = globalThis;
@@ -68,8 +67,7 @@ export async function getChildrenByPage(pageId: string) {
       },
     }
   );
-  core.debug(`page: ${_.toString(page)}`);
-  return _.get(page, 'children.page.results', []);
+  return _.get(page.data, 'children.page.results', []);
 }
 
 export async function createPage(

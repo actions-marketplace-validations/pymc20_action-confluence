@@ -34,13 +34,8 @@ async function run(): Promise<void> {
       return;
     }
     const children = await getChildrenByPage(parentPageId);
-    core.debug(`title: ${children}`);
     let notExistPage = true;
     for (const c of children) {
-      core.debug(`title: ${c.title}`);
-      core.debug(`title: ${c.childPageTitle}`);
-      core.debug(`title: ${c.title === childPageTitle}`);
-      core.debug(`title: ${_.isEqual(c.title, childPageTitle)}`);
       if (c.title === childPageTitle) {
         const {version, prevContents} = await getVersionAndContents(c.id);
         await updatePage({
