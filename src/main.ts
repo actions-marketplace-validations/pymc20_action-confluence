@@ -34,6 +34,7 @@ async function run(): Promise<void> {
       return;
     }
     const children = await getChildrenByPage(parentPageId);
+    let notExistPage = true;
     for (const c of children) {
       if (c.title === childPageTitle) {
         const {version, prevContents} = await getVersionAndContents(c.id);
@@ -44,10 +45,11 @@ async function run(): Promise<void> {
           childPageTitle,
           contentsJson,
         });
-      } else {
-        await createPage(parentPageId, childPageTitle, contentsJson, spaceKey);
+        notExistPage = false;
       }
     }
+    if (notExistPage)
+      await createPage(parentPageId, childPageTitle, contentsJson, spaceKey);
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
