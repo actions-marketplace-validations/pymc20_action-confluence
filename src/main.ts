@@ -7,6 +7,11 @@ import {
   updatePage,
 } from './api';
 
+let title = '';
+let title2: string;
+let title3: string;
+let title4: string;
+
 async function run(): Promise<void> {
   try {
     const parentPageId = core.getInput('parentPageId');
@@ -36,10 +41,10 @@ async function run(): Promise<void> {
     const children = await getChildrenByPage(parentPageId);
     let notExistPage = true;
     for (const c of children) {
-      core.debug(`title: ${c.title}`);
-      core.debug(`title: ${c.childPageTitle}`);
-      core.debug(`title: ${c.title === childPageTitle}`);
-      core.debug(`title: ${_.isEqual(c.title, childPageTitle)}`);
+      title = c.title;
+      title2 = c.childPageTitle;
+      title3 = _.toString(c.title === childPageTitle);
+      title4 = _.toString(_.isEqual(c.title, childPageTitle));
       if (c.title === childPageTitle) {
         const {version, prevContents} = await getVersionAndContents(c.id);
         await updatePage({
@@ -57,6 +62,10 @@ async function run(): Promise<void> {
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);
+      core.debug(title);
+      core.debug(title2);
+      core.debug(title3);
+      core.debug(title4);
     }
   }
 }
