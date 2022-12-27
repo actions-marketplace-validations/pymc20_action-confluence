@@ -5,8 +5,8 @@ inputs:
   parentPageId:
     description: Jira Confluence Parent Page ID
     required: true
-  parentPageTitle:
-    description: Jira Confluence Parent Page Title
+  childPageTitle:
+    description: Jira Confluence Child Page Title
     required: true
   spaceKey:
     description: Jira Confluence Space Key
