@@ -68,7 +68,7 @@ export async function getChildrenByPage(pageId: string) {
       },
     }
   );
-  core.debug(`page: ${page}`);
+  core.debug(`page: ${JSON.stringify(page)}`);
   return _.get(page, 'children.page.results', []);
 }
 
