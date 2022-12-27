@@ -34,6 +34,7 @@ async function run(): Promise<void> {
       return;
     }
     const children = await getChildrenByPage(parentPageId);
+    core.debug(`title: ${children}`);
     let notExistPage = true;
     for (const c of children) {
       core.debug(`title: ${c.title}`);
