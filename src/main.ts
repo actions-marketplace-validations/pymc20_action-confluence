@@ -36,6 +36,9 @@ async function run(): Promise<void> {
     const children = await getChildrenByPage(parentPageId);
     let notExistPage = true;
     for (const c of children) {
+      console.log(c.title, childPageTitle);
+      console.log(c.title === childPageTitle);
+      console.log(_.isEqual(c.title, childPageTitle));
       if (c.title === childPageTitle) {
         const {version, prevContents} = await getVersionAndContents(c.id);
         await updatePage({
