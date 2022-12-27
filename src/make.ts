@@ -34,7 +34,7 @@ function makeHtml(jsonString: JSON, prevContents: string) {
       } else {
         html += `<p>${val}</p>`;
       }
-      if (titleIdx + 1 <= titleNodeList.length) {
+      if (titleIdx !== -1 && titleIdx + 1 <= titleNodeList.length) {
         titleNodeList[titleIdx + 1].insertAdjacentHTML('beforebegin', html);
         html = '';
       }
