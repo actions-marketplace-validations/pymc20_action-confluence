@@ -22,7 +22,10 @@ function makeHtml(jsonString: JSON, prevContents: string) {
     const titleNodeList = parseHtml.querySelectorAll('h1');
     Object.keys(jsonString).map((x: any) => {
       const val = _.get(jsonString, x, '');
-      const titleIdx = titleNodeList.indexOf(x);
+      const titleIdx = _.findIndex(titleNodeList, (n: any) => {
+        const t = n.toString().replace(x, '');
+        return '<h1></h1>' === t;
+      });
       const splitVal = _.split(val, '\n');
       if (_.isArray(splitVal)) {
         splitVal.map(y => {
@@ -32,7 +35,7 @@ function makeHtml(jsonString: JSON, prevContents: string) {
         html += `<p>${val}</p>`;
       }
       if (titleIdx + 1 <= titleNodeList.length) {
-        titleNodeList[titleIdx].insertAdjacentHTML('beforebegin', html);
+        titleNodeList[titleIdx + 1].insertAdjacentHTML('beforebegin', html);
         html = '';
       }
     });
