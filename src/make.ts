@@ -11,10 +11,16 @@ function makeHtml(jsonString: JSON, prevContents: string) {
       const splitVal = _.split(val, '\n');
       if (_.isArray(splitVal)) {
         splitVal.map(y => {
-          html += `<p>${y}</p>`;
+          html += `<p>${y
+            .replace('&', '&amp;')
+            .replace('<', '&lt;')
+            .replace('>', '&gt;')}</p>`;
         });
       } else {
-        html += `<p>${val}</p>`;
+        html += `<p>${val
+          .replace('&', '&amp;')
+          .replace('<', '&lt;')
+          .replace('>', '&gt;')}</p>`;
       }
     });
   } else {
@@ -29,10 +35,16 @@ function makeHtml(jsonString: JSON, prevContents: string) {
       const splitVal = _.split(val, '\n');
       if (_.isArray(splitVal)) {
         splitVal.map(y => {
-          html += `<p>${y}</p>`;
+          html += `<p>${y
+            .replace('&', '&amp;')
+            .replace('<', '&lt;')
+            .replace('>', '&gt;')}</p>`;
         });
       } else {
-        html += `<p>${val}</p>`;
+        html += `<p>${val
+          .replace('&', '&amp;')
+          .replace('<', '&lt;')
+          .replace('>', '&gt;')}</p>`;
       }
       if (titleIdx !== -1 && titleIdx + 1 < titleNodeList.length) {
         titleNodeList[titleIdx + 1].insertAdjacentHTML('beforebegin', html);
@@ -51,9 +63,6 @@ export function makeContents(contentsJson: string, prevContents: string) {
     if (!_.isArray(jsonString)) {
       result += makeHtml(jsonString, prevContents);
     }
-    result = result.replace('&', '&amp;');
-    result = result.replace('<', '&lt;');
-    result = result.replace('>', '&gt;');
     return result;
   } catch (error) {
     if (error instanceof Error) {
