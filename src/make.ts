@@ -52,6 +52,8 @@ export function makeContents(contentsJson: string, prevContents: string) {
       result += makeHtml(jsonString, prevContents);
     }
     result = result.replace('&', '&amp;');
+    result = result.replace('<', '&lt;');
+    result = result.replace('>', '&gt;');
     return result;
   } catch (error) {
     if (error instanceof Error) {
