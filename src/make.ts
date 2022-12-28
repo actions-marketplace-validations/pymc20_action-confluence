@@ -48,9 +48,7 @@ export function makeContents(contentsJson: string, prevContents: string) {
   try {
     const jsonString = JSON.parse(contentsJson);
     let result = '';
-    if (_.isArray(jsonString)) {
-      return result;
-    } else {
+    if (!_.isArray(jsonString)) {
       result += makeHtml(jsonString, prevContents);
     }
     return result;

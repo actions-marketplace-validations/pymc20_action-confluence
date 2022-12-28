@@ -38,6 +38,7 @@ async function run(): Promise<void> {
     for (const c of children) {
       if (c.title === childPageTitle) {
         const {version, prevContents} = await getVersionAndContents(c.id);
+        core.debug('before update');
         await updatePage({
           pageId: c.id,
           version,
@@ -45,6 +46,7 @@ async function run(): Promise<void> {
           childPageTitle,
           contentsJson,
         });
+        core.debug('after update');
         notExistPage = false;
       }
     }
