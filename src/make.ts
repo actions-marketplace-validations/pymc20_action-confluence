@@ -20,9 +20,14 @@ function makeHtml(jsonString: JSON, prevContents: string) {
   } else {
     let idx = 0;
     const htmlKeyVal: any = {};
-    while (prevContents.match(/<[a-z/0-9]+>/)) {
-      htmlKeyVal[`::${idx}::`] = (prevContents.match(/<[a-z/0-9]+>/) || [])[0];
-      prevContents = prevContents.replace(/<[a-z/0-9]+>/, `::${idx}::`);
+    while (prevContents.match(/<[a-zA-Z/0-9\-\\.":= ]+>/)) {
+      htmlKeyVal[`::${idx}::`] = (prevContents.match(
+        /<[a-zA-Z/0-9\-\\.":= ]+>/
+      ) || [])[0];
+      prevContents = prevContents.replace(
+        /<[a-zA-Z/0-9\-\\.":= ]+>/,
+        `::${idx}::`
+      );
       idx += 1;
     }
     prevContents = _.escape(prevContents);
