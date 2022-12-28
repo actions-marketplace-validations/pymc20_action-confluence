@@ -6,7 +6,10 @@ function makeHtml(jsonString: JSON, prevContents: string) {
   let html = '';
   if (_.isEmpty(prevContents)) {
     Object.keys(jsonString).map((x: any) => {
-      html += `<h1>${x}</h1>`;
+      html += `<h1>${x
+        .replace('&', '&amp;')
+        .replace('<', '&lt;')
+        .replace('>', '&gt;')}</h1>`;
       const val = _.get(jsonString, x, '');
       const splitVal = _.split(val, '\n');
       if (_.isArray(splitVal)) {
@@ -25,6 +28,12 @@ function makeHtml(jsonString: JSON, prevContents: string) {
     });
   } else {
     const parseHtml = parse(prevContents);
+    parseHtml.childNodes.forEach(n => {
+      n.textContent = n.textContent
+        .replace('&', '&amp;')
+        .replace('<', '&lt;')
+        .replace('>', '&gt;');
+    });
     const titleNodeList = parseHtml.querySelectorAll('h1');
     Object.keys(jsonString).map((x: any) => {
       const val = _.get(jsonString, x, '');
