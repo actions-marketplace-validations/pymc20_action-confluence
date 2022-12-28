@@ -6,34 +6,18 @@ function makeHtml(jsonString: JSON, prevContents: string) {
   let html = '';
   if (_.isEmpty(prevContents)) {
     Object.keys(jsonString).map((x: any) => {
-      html += `<h1>${_.escape(x)}</h1>`;
+      html += `<h1>${x}</h1>`;
       const val = _.get(jsonString, x, '');
       const splitVal = _.split(val, '\n');
       if (_.isArray(splitVal)) {
         splitVal.map(y => {
-          html += `<p>${_.escape(y)}</p>`;
+          html += `<p>${y}</p>`;
         });
       } else {
-        html += `<p>${_.escape(val)}</p>`;
+        html += `<p>${val}</p>`;
       }
     });
   } else {
-    let idx = 0;
-    const htmlKeyVal: any = {};
-    while (prevContents.match(/<[a-zA-Z/0-9\-\\.":= ]+>/)) {
-      htmlKeyVal[`::${idx}::`] = (prevContents.match(
-        /<[a-zA-Z/0-9\-\\.":= ]+>/
-      ) || [])[0];
-      prevContents = prevContents.replace(
-        /<[a-zA-Z/0-9\-\\.":= ]+>/,
-        `::${idx}::`
-      );
-      idx += 1;
-    }
-    prevContents = _.escape(prevContents);
-    Object.keys(htmlKeyVal).forEach(x => {
-      prevContents = prevContents.replace(x, htmlKeyVal[x]);
-    });
     const parseHtml = parse(prevContents);
     const titleNodeList = parseHtml.querySelectorAll('h1');
     Object.keys(jsonString).map((x: any) => {
@@ -45,10 +29,10 @@ function makeHtml(jsonString: JSON, prevContents: string) {
       const splitVal = _.split(val, '\n');
       if (_.isArray(splitVal)) {
         splitVal.map(y => {
-          html += `<p>${_.escape(y)}</p>`;
+          html += `<p>${y}</p>`;
         });
       } else {
-        html += `<p>${_.escape(val)}</p>`;
+        html += `<p>${val}</p>`;
       }
       if (titleIdx !== -1 && titleIdx + 1 < titleNodeList.length) {
         titleNodeList[titleIdx + 1].insertAdjacentHTML('beforebegin', html);
@@ -57,6 +41,18 @@ function makeHtml(jsonString: JSON, prevContents: string) {
     });
     html = parseHtml.toString() + html;
   }
+  let idx = 0;
+  const htmlKeyVal: any = {};
+  while (html.match(/<[a-zA-Z/0-9\-\\.":= ]+>/)) {
+    htmlKeyVal[`::${idx}::`] = (html.match(/<[a-zA-Z/0-9\-\\.":= ]+>/) ||
+      [])[0];
+    html = html.replace(/<[a-zA-Z/0-9\-\\.":= ]+>/, `::${idx}::`);
+    idx += 1;
+  }
+  html = _.escape(html);
+  Object.keys(htmlKeyVal).forEach(x => {
+    html = html.replace(x, htmlKeyVal[x]);
+  });
   return html;
 }
 
