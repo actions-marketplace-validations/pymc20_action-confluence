@@ -1,7 +1,6 @@
 import axios from 'axios';
 import _ from 'lodash';
 import {makeContents} from './make';
-import * as core from '@actions/core';
 
 export async function getVersionAndContents(pageId: string) {
   const {JIRA_URL, JIRA_AUTH} = globalThis;
@@ -35,7 +34,6 @@ export async function updatePage({
   contentsJson: string;
 }) {
   const {JIRA_URL, JIRA_AUTH} = globalThis;
-  core.debug(makeContents(contentsJson, prevContents));
   await axios.put(
     `${JIRA_URL}/wiki/rest/api/content/${pageId}`,
     {

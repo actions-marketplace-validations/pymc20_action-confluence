@@ -51,6 +51,7 @@ export function makeContents(contentsJson: string, prevContents: string) {
     if (!_.isArray(jsonString)) {
       result += makeHtml(jsonString, prevContents);
     }
+    result = result.replace('&', '&amp;');
     return result;
   } catch (error) {
     if (error instanceof Error) {
